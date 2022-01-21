@@ -1,0 +1,23 @@
+name: Publish to GitHub Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v2
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+    - name: Build
+      run: ./gradlew build
+    - name: Publish
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_USERNAME: ${{ github.actor }}
+      run: ./gradlew publish
